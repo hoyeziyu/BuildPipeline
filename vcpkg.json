@@ -1,0 +1,12 @@
+{
+  "name": "greeter",
+  "version": "1.0.0",
+  "license": "MIT",
+  "description": "An impressive program that says hello to people",
+  "homepage": "https://github.com/hoyeziyu/BuildPipeline",
+  "dependencies": [
+    "spdlog",
+    "gtest"
+  ],
+  "builtin-baseline": "aa2d37682e3318d93aef87efa7b0e88e81cd3d59"
+}
