@@ -35,3 +35,4 @@ add_subdirectory(app)     # The executable
 
 enable_testing() 
 add_subdirectory(tests)
+add_subdirectory(benchmarks)
