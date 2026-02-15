@@ -12,4 +12,10 @@ bootstrap-vcpkg.bat
 提供的变量 vendor/vcpkg/scripts/buildsystems/vcpkg.cmake
 
 也可以使用系统环境变量PATH来指定 vcpkg 的安装目录。
+
+3.修改CMakePresets.json中的testPresets中sanitize的PATH变量，指向
+加载 MSVC 的 ASan 运行时动态库的具体位置
+```
+通常是clang_rt.asan_dynamic-x86_64.dll的位置：
+where /r "D:\Apps\vs2022\path" clang_rt.asan_dynamic-x86_64.dll
 ```

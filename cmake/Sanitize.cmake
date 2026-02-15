@@ -1,6 +1,6 @@
 ﻿cmake_minimum_required(VERSION 3.23)
 
-set(SANITIZE_CONDITION "$<CONFIG:Sanitize>")
+set(SANITIZE_CONDITION "$<CONFIG:Sanitize>")    # 对应到CMakePresets.json中Sanitize预设
 
 if (MSVC)
     # 直接在全局添加标志
