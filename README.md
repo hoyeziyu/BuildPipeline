@@ -1,6 +1,9 @@
 # BuildPipeline
 cmake构建流程，实现完整的配置树、构建树、安装树的构建流程，支持vcpkg依赖库的集成。
-
+```
+新增submodule的命令：
+	git submodule add https://github.com/microsoft/vcpkg vendor/vcpkg
+```
 
 1.进入vendor/vcpkg目录，执行以下命令安装依赖库：
 ```
