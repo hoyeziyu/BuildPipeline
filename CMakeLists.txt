@@ -27,6 +27,8 @@ endforeach()
 # Name the overall project
 project(Greeter)
 
+include(cmake/Sanitize.cmake)
+
 # Bring in our components
 add_subdirectory(greeter) # The library 
 add_subdirectory(app)     # The executable
