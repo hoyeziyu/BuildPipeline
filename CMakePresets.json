@@ -68,8 +68,12 @@
     {
       "name": "sanitize",
       "configurePreset": "sanitize",
+      "output": {
+        "outputOnFailure": true
+      },
       "environment": {
-        "PATH": "D:/Apps/vs2022/path/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64;$PENv{PATH}"
+        "PATH": "D:/Apps/vs2022/path/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64;$PENv{PATH}",
+        "ASAN_OPTIONS": "detect_stack_use_after_return=1:symbolize=1:check_initialization_order=1"
       }
     }
   ]

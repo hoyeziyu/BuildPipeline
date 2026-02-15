@@ -22,3 +22,25 @@ TEST_F(GreeterTest, GreetReturnsCorrectString) {
         "Hello from the Greeter class!"
     );
 }
+
+const char* getDanglingPointer() {
+    char local_buffer[] = "This is temporary";
+
+    // DANGER: returning pointer to local variable
+    return local_buffer;
+}
+
+TEST(
+    ASanRuntimeOptionTests,
+    FailsToDetectUseAfterReturnByDefault
+) {
+    const char* dangling_ptr = getDanglingPointer();
+
+    // The memory dangling_ptr points to is no longer valid.
+    // Accessing it is undefined behavior.
+    char first_char = dangling_ptr[0]; // <w>
+
+    // This assertion might pass by chance if
+    // the memory hasn't been overwritten.
+    EXPECT_NE(first_char, '\0');
+}

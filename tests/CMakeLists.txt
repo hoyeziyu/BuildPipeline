@@ -9,4 +9,8 @@ target_link_libraries(GreeterTests PRIVATE
 	GTest::gtest_main   # Provides a main() function 
 )
 
-gtest_discover_tests(GreeterTests)
+gtest_discover_tests(GreeterTests PROPERTIES
+  LABELS "library"
+  ENVIRONMENT 
+    "ASAN_OPTIONS=detect_stack_use_after_return=1" 
+)
