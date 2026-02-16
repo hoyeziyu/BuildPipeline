@@ -36,3 +36,24 @@ add_subdirectory(app)     # The executable
 enable_testing() 
 add_subdirectory(tests)
 add_subdirectory(benchmarks)
+
+# Find the clang-format executable
+#[[
+	find_program从PATH环境变量中查找可执行文件，并将结果存储在CLANG_FORMAT_EXE变量中。
+]]
+find_program(CLANG_FORMAT_EXE clang-format) # REQUIRED
+get_target_property(target_sources GreeterApp SOURCES)
+
+# Check if it was found
+if(CLANG_FORMAT_EXE) 
+  message(STATUS "Found clang-format at ${CLANG_FORMAT_EXE}") 
+  add_custom_target(format 
+    COMMENT "Formatting files with clang-format..." 
+    COMMAND ${CLANG_FORMAT_EXE} -i ${target_sources} 
+    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/app
+  ) 
+  message(STATUS "Added 'format' target") 
+else() 
+   message(WARNING
+    "clang-format not found - format target unavailable") 
+endif()

@@ -40,6 +40,10 @@
         "CMAKE_CXX_FLAGS": "/fsanitize=address /Zi",
         "CMAKE_EXE_LINKER_FLAGS": "/INCREMENTAL:NO"
       }
+    },
+    {
+      "name": "format",
+      "binaryDir": "${sourceDir}/build/format"
     }
   ],
   "buildPresets": [
@@ -56,6 +60,11 @@
     {
       "name": "sanitize",
       "configurePreset": "sanitize"
+    },
+    {
+      "name": "format",
+      "configurePreset": "format",
+      "targets": [ "format" ]
     }
   ],
   "testPresets": [
