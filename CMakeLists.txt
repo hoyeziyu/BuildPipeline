@@ -42,7 +42,22 @@ add_subdirectory(benchmarks)
 	find_program从PATH环境变量中查找可执行文件，并将结果存储在CLANG_FORMAT_EXE变量中。
 ]]
 find_program(CLANG_FORMAT_EXE clang-format) # REQUIRED
-get_target_property(target_sources GreeterApp SOURCES)
+set(FORMAT_TARGETS GreeterApp GreeterLib)
+set(ALL_SOURCES)
+
+foreach(target IN LISTS FORMAT_TARGETS)
+  get_target_property(target_sources ${target} SOURCES)
+  get_target_property(target_source_dir ${target} SOURCE_DIR)
+  
+  # Convert relative paths to absolute paths for this target
+  foreach(source ${target_sources})
+    if(IS_ABSOLUTE ${source})
+      list(APPEND ALL_SOURCES ${source})
+    else()
+      list(APPEND ALL_SOURCES ${target_source_dir}/${source})
+    endif()
+  endforeach()
+endforeach()
 
 # Check if it was found
 if(CLANG_FORMAT_EXE) 
@@ -50,7 +65,6 @@ if(CLANG_FORMAT_EXE)
   add_custom_target(format 
     COMMENT "Formatting files with clang-format..." 
     COMMAND ${CLANG_FORMAT_EXE} -i ${target_sources} 
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/app
   ) 
   message(STATUS "Added 'format' target") 
 else() 
