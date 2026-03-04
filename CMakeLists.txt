@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.21)	# 满足预设要求的最低cmake版本 
+﻿cmake_minimum_required(VERSION 3.23)	# 满足预设要求的最低cmake版本 
 
 set(ASSET_FILES
   logo.png
@@ -28,6 +28,7 @@ endforeach()
 project(Greeter)
 
 include(cmake/Sanitize.cmake)
+include(cmake/Format.cmake)
 
 # Bring in our components
 add_subdirectory(greeter) # The library 
@@ -37,37 +38,6 @@ enable_testing()
 add_subdirectory(tests)
 add_subdirectory(benchmarks)
 
-# Find the clang-format executable
-#[[
-	find_program从PATH环境变量中查找可执行文件，并将结果存储在CLANG_FORMAT_EXE变量中。
-]]
-find_program(CLANG_FORMAT_EXE clang-format) # REQUIRED
-set(FORMAT_TARGETS GreeterApp GreeterLib)
-set(ALL_SOURCES)
+# Passing targets we want to format as arguments 这里的顺序很重要
+add_clang_format(GreeterLib GreeterApp)
 
-foreach(target IN LISTS FORMAT_TARGETS)
-  get_target_property(target_sources ${target} SOURCES)
-  get_target_property(target_source_dir ${target} SOURCE_DIR)
-  
-  # Convert relative paths to absolute paths for this target
-  foreach(source ${target_sources})
-    if(IS_ABSOLUTE ${source})
-      list(APPEND ALL_SOURCES ${source})
-    else()
-      list(APPEND ALL_SOURCES ${target_source_dir}/${source})
-    endif()
-  endforeach()
-endforeach()
-
-# Check if it was found
-if(CLANG_FORMAT_EXE) 
-  message(STATUS "Found clang-format at ${CLANG_FORMAT_EXE}") 
-  add_custom_target(format 
-    COMMENT "Formatting files with clang-format..." 
-    COMMAND ${CLANG_FORMAT_EXE} -i ${target_sources} 
-  ) 
-  message(STATUS "Added 'format' target") 
-else() 
-   message(WARNING
-    "clang-format not found - format target unavailable") 
-endif()

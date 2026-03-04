@@ -27,3 +27,16 @@ where /r "D:\Apps\vs2022\path" clang_rt.asan_dynamic-x86_64.dll
 验证是否安装成功：
 clang-format --version
 ```
+
+配置命令:
+```
+cmake --preset=windows-msvc-debug
+```
+构建命令:
+```
+cmake --build --preset=windows-msvc-debug
+```
+测试命令:
+```
+ctest --preset=sanitize
+```
