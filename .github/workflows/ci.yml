@@ -6,7 +6,33 @@ on:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
+
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vendor/vcpkg
+
     steps:
-    - name: Check out code
-      uses: actions/checkout@v4
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # bootstrap-vcpkg 在 Windows 上会编译 vcpkg，需要先能用 MSVC
+      - name: Enable MSVC environment (x64)
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Bootstrap vcpkg
+        shell: cmd
+        run: vendor\vcpkg\bootstrap-vcpkg.bat
+
+      # 与 CMakePresets.json 一致：configurePresets.windows-msvc-debug / buildPresets.debug / testPresets.debug
+      - name: Configure CMake
+        run: cmake --preset windows-msvc-debug
+
+      - name: Build project
+        run: cmake --build --preset debug
+
+      - name: Run tests
+        run: ctest --preset debug
