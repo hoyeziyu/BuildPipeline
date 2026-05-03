@@ -16,6 +16,17 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+          fetch-depth: 0
+
+      # vcpkg.json 的 builtin-baseline 需要 git 能解析该提交上的 versions/baseline.json；
+      # 子模块默认浅克隆时会出现 git show ... baseline.json 失败，需拉全历史或取消 shallow。
+      - name: Unshallow vcpkg submodule (for manifest baseline)
+        shell: bash
+        run: |
+          cd vendor/vcpkg
+          if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+            git fetch --unshallow
+          fi
 
       # bootstrap-vcpkg 在 Windows 上会编译 vcpkg，需要先能用 MSVC
       - name: Enable MSVC environment (x64)
