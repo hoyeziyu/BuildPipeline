@@ -2,12 +2,12 @@
 #include <iostream>
 #include <InternalDetails.h>
 
-std::string get_greeting() {
-    return "Hello from the modular Greeter library!" + InternalDetails::Name;
-}
+// std::string get_greeting() {
+//     return "Hello from the modular Greeter library!" + InternalDetails::Name;
+// }
 
 std::string Greeter::greet() const {
 	char buffer[5];
-	//std::cout << buffer[5];	内存溢出报错
+	// std::cout << buffer[5];	内存溢出报错
 	return "Hello from the Greeter class!";
 }
