@@ -6,6 +6,7 @@
 //     return "Hello from the modular Greeter library!" + InternalDetails::Name;
 // }
 
+
 std::string Greeter::greet() const {
 	char buffer[5];
 	// std::cout << buffer[5];	内存溢出报错
