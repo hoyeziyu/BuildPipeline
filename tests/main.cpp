@@ -3,7 +3,7 @@
 
 TEST(GreeterAPITests, GetGreetingReturnsCorrectString) {
     const std::string expected{
-      "Hello from the modular Greeter library!"
+      "Hello from the modular Greeter library! the modular Greeting Library"
     };
 
     EXPECT_EQ(get_greeting(), expected);

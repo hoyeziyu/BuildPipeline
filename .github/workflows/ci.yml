@@ -1,0 +1,49 @@
+name: C++ CI
+
+on:
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: windows-latest
+
+    env:
+      VCPKG_ROOT: ${{ github.workspace }}/vendor/vcpkg
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      # vcpkg.json 的 builtin-baseline 需要 git 能解析该提交上的 versions/baseline.json；
+      # 子模块默认浅克隆时会出现 git show ... baseline.json 失败，需拉全历史或取消 shallow。
+      - name: Unshallow vcpkg submodule (for manifest baseline)
+        shell: bash
+        run: |
+          cd vendor/vcpkg
+          if [ "$(git rev-parse --is-shallow-repository)" = "true" ]; then
+            git fetch --unshallow
+          fi
+
+      # bootstrap-vcpkg 在 Windows 上会编译 vcpkg，需要先能用 MSVC
+      - name: Enable MSVC environment (x64)
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Bootstrap vcpkg
+        shell: cmd
+        run: vendor\vcpkg\bootstrap-vcpkg.bat
+
+      # 与 CMakePresets.json 一致：configurePresets.windows-msvc-debug / buildPresets.debug / testPresets.debug
+      - name: Configure CMake
+        run: cmake --preset windows-msvc-debug
+
+      - name: Build project
+        run: cmake --build --preset debug
+
+      - name: Run tests
+        run: ctest --preset debug
