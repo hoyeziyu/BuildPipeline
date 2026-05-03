@@ -3,7 +3,7 @@
 #include <InternalDetails.h>
 
 std::string get_greeting() {
-    return "Hello from the modular Greeter library!" + InternalDetails::Name;
+    return "Hello from the modular Greeter library! " + InternalDetails::Name;
 }
 
 std::string Greeter::greet() const {
