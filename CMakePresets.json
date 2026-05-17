@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 6,
   "configurePresets": [
     {
       "name": "base",
@@ -64,7 +64,9 @@
     {
       "name": "format",
       "configurePreset": "format",
-      "targets": [ "format" ]
+      "targets": [
+        "format"
+      ]
     }
   ],
   "testPresets": [
@@ -72,7 +74,18 @@
       "name": "debug",
       "displayName": "Run All Tests",
       "configurePreset": "windows-msvc-debug",
-      "output": { "outputOnFailure": true }
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "release",
+      "displayName": "Run All Tests (Release)",
+      "configurePreset": "windows-msvc-release",
+      "configuration": "Release",
+      "output": {
+        "outputOnFailure": true
+      }
     },
     {
       "name": "sanitize",
@@ -83,6 +96,29 @@
       "environment": {
         "PATH": "D:/Apps/vs2022/path/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64;$PENv{PATH}",
         "ASAN_OPTIONS": "detect_stack_use_after_return=1:symbolize=1:check_initialization_order=1"
+      }
+    }
+  ],
+  "packagePresets": [
+    {
+      "name": "package-base",
+      "configurePreset": "windows-msvc-release",
+      "configurations": ["Release"],
+      "description": "The Greeter Library",
+      "vendorName": "hingeHoy.dev",
+      "variables": {
+        "CPACK_PACKAGE_CONTACT": "https://github.com/hoyeziyu/BuildPipeline"
+      }
+    },
+    {
+      "name": "dev-zip",
+      "displayName": "Developer Archive (ZIP)",
+      "inherits": "package-base",
+      "generators": [
+        "ZIP"
+      ],
+      "variables": {
+        "CPACK_COMPONENTS_ALL": "Development"
       }
     }
   ]

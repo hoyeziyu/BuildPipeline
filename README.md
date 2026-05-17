@@ -40,3 +40,10 @@ cmake --build --preset=windows-msvc-debug
 ```
 ctest --preset=sanitize
 ```
+
+5.打包固定流程
+```
+cmake --preset windows-msvc-release
+cmake --build --preset release
+cpack --preset dev-zip
+```
