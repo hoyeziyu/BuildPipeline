@@ -6,6 +6,11 @@ on:
 
 jobs:
   build-and-test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        config: [debug, release]
+
     runs-on: windows-latest
 
     env:
@@ -38,12 +43,25 @@ jobs:
         shell: cmd
         run: vendor\vcpkg\bootstrap-vcpkg.bat
 
-      # 与 CMakePresets.json 一致：configurePresets.windows-msvc-debug / buildPresets.debug / testPresets.debug
+      # 与 CMakePresets.json 一致：windows-msvc-release / release / dev-zip
       - name: Configure CMake
-        run: cmake --preset windows-msvc-debug
+        run: cmake --preset windows-msvc-${{ matrix.config }}
 
       - name: Build project
-        run: cmake --build --preset debug
+        run: cmake --build --preset ${{ matrix.config }}
 
       - name: Run tests
-        run: ctest --preset debug
+        run: ctest --preset ${{ matrix.config }}
+
+      - name: Package
+        if: matrix.config == 'release'
+        run: cpack --preset dev-zip
+
+      # 在 CI 运行器上创建的任何文件都是临时的。作业完成后，虚拟机被销毁，所有文件丢失。为了保留作业的输出，我们需要使用工作流工件(artifacts)
+      # 工件artifacts是从工作流程运行中保存的文件或文件集合。作业完成后，你可以从 GitHub 上的工作流程摘要页面查看并下载其工件artifacts 
+      - name: Upload Package Artifact
+        if: matrix.config == 'release'
+        uses: actions/upload-artifact@v4
+        with:
+          name: Greeter-Package-${{ matrix.os }}-${{ matrix.config}} 
+          path: build/msvc-release/Greeter-*-Development.zip
